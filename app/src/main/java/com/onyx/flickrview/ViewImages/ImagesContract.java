@@ -1,4 +1,6 @@
-package com.onyx.flickrview.ViewImages;
+package com.onyx.flickrview.viewImages;
+
+import android.support.annotation.NonNull;
 
 import com.onyx.flickrview.data.Image;
 
@@ -17,5 +19,9 @@ public interface ImagesContract {
 
         void showImages(String[] imageUrls);
 
+    }
+    interface ActionsListener {
+
+        void loadImages(boolean forceUpdate);
     }
 }

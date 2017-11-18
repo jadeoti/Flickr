@@ -1,34 +1,30 @@
-package com.onyx.flickrview.ViewImages;
+package com.onyx.flickrview.viewImages;
 
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.onyx.flickrview.R;
+import com.onyx.flickrview.data.Image;
+import com.onyx.flickrview.adapters.ImageAdapter;
 
-/**
- * A simple {@link Fragment} subclass.
- * Activities that contain this fragment must implement the
- * {@link ImagesFragment.OnFragmentInteractionListener} interface
- * to handle interaction events.
- * Use the {@link ImagesFragment#newInstance} factory method to
- * create an instance of this fragment.
- */
-public class ImagesFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+import java.util.ArrayList;
+import java.util.List;
 
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
+
+public class ImagesFragment extends Fragment implements ImagesContract.View{
 
     private OnFragmentInteractionListener mListener;
+    private ImageAdapter mListAdapter;
+    private ImagesContract.ActionsListener mActionsListener;
 
     public ImagesFragment() {
         // Required empty public constructor
@@ -37,38 +33,48 @@ public class ImagesFragment extends Fragment {
         return new ImagesFragment();
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ImagesFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ImagesFragment newInstance(String param1, String param2) {
-        ImagesFragment fragment = new ImagesFragment();
-        Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        fragment.setArguments(args);
-        return fragment;
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+        mListAdapter = new ImageAdapter(this.getContext(), new ArrayList<Image>(0));
+        mActionsListener = new ImagesPresenter(this);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mActionsListener.loadImages(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_images, container, false);
+//        return inflater.inflate(R.layout.fragment_images, container, false);
+        View root = inflater.inflate(R.layout.fragment_images, container, false);
+        RecyclerView recyclerView = (RecyclerView) root.findViewById(R.id.images_list);
+        recyclerView.setAdapter(mListAdapter);
+
+        int numColumns = getContext().getResources().getInteger(R.integer.num_images_columns);
+
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+
+
+        // Pull-to-refresh
+        SwipeRefreshLayout swipeRefreshLayout =
+                (SwipeRefreshLayout) root.findViewById(R.id.refresh_layout);
+        swipeRefreshLayout.setColorSchemeColors(
+                ContextCompat.getColor(getActivity(), R.color.colorPrimary),
+                ContextCompat.getColor(getActivity(), R.color.colorAccent),
+                ContextCompat.getColor(getActivity(), R.color.colorPrimaryDark));
+        swipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                mActionsListener.loadImages(true);
+            }
+        });
+        return root;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -78,21 +84,48 @@ public class ImagesFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        if (context instanceof OnFragmentInteractionListener) {
-            mListener = (OnFragmentInteractionListener) context;
-        } else {
-            throw new RuntimeException(context.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
-    }
+//    @Override
+//    public void onAttach(Context context) {
+//        super.onAttach(context);
+//        if (context instanceof OnFragmentInteractionListener) {
+//            mListener = (OnFragmentInteractionListener) context;
+//        } else {
+//            throw new RuntimeException(context.toString()
+//                    + " must implement OnFragmentInteractionListener");
+//        }
+//    }
 
     @Override
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void setProgressIndicator(final boolean active) {
+
+        if (getView() == null) {
+            return;
+        }
+        final SwipeRefreshLayout srl =
+                (SwipeRefreshLayout) getView().findViewById(R.id.refresh_layout);
+
+        srl.post(new Runnable() {
+            @Override
+            public void run() {
+                srl.setRefreshing(active);
+            }
+        });
+    }
+
+    @Override
+    public void getImages(List<Image> images) {
+        mListAdapter.replaceData(images);
+    }
+
+    @Override
+    public void showImages(String[] imageUrls) {
+
     }
 
     /**
