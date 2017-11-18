@@ -18,11 +18,10 @@ public class ImagesActivity extends AppCompatActivity {
             initFragment(ImagesFragment.newInstance());
         }
     }
-    private void initFragment(Fragment notesFragment) {
-        // Add the NotesFragment to the layout
+    private void initFragment(Fragment fragment) {
         FragmentManager fragmentManager = getSupportFragmentManager();
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        transaction.add(R.id.contentFrame, notesFragment);
+        transaction.add(R.id.contentFrame, fragment);
         transaction.commit();
     }
 }

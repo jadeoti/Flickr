@@ -32,16 +32,16 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
-        View noteView = inflater.inflate(R.layout.item_image, parent, false);
+        View imageView = inflater.inflate(R.layout.item_image, parent, false);
 
-        return new ViewHolder(noteView);
+        return new ViewHolder(imageView);
     }
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
         Image image = mImages.get(position);
 
-        Glide.with(mContext).load(viewHolder.image.getmImageUrl()).into(viewHolder.mImageView);
+        Glide.with(mContext).load(viewHolder.image.getmMediaUrl().getmImageUrl()).into(viewHolder.mImageView);
     }
 
     public void replaceData(List<Image> images) {

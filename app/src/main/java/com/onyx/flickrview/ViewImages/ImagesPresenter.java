@@ -61,11 +61,12 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
             Log.d(TAG, "FetchImageTask doInBackground. URL is "+ imgRequestUrl);
             try {
                 String excJsonResponse = FlickrService.getResponse(imgRequestUrl);
-                Image[] rateData = formatJson(excJsonResponse);
-                Log.d(TAG, "Data fetched from url: "+ excJsonResponse);
+                Image[] imageData = formatJson(excJsonResponse);
+                for(Image image: imageData)
+                    Log.d(TAG, image.toString());
 
 
-                return rateData;
+                return imageData;
 
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,11 +77,12 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
         @Override
         protected void onPostExecute(Image[] imageData) {
             Log.d(TAG, "In onPostExecute" );
+            mImagesView.setProgressIndicator(false);
             if (imageData != null) {
                 String[] imageUrls = new String[imageData.length];
                 int index = 0;
                 for(Image image: imageData){
-                    imageUrls[index]=image.getmImageUrl();
+                    Log.d(TAG, image.toString());
                     index++;
                 }
                 mImagesView.showImages(imageUrls);
@@ -90,11 +92,19 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
 
     public Image[] formatJson (String jsonString) throws JSONException {
 
+        int lastIndex = jsonString.length()-1;
+        StringBuffer formattedJsonString = new StringBuffer(jsonString);
+
+        formattedJsonString.replace(lastIndex,lastIndex,"");
+        formattedJsonString.replace(0,15,"");
+
+        jsonString = formattedJsonString.toString();
+
+
         JSONObject json = new JSONObject(jsonString);
-        JSONObject jsonFlickrFeedJson = json.getJSONObject("jsonFlickrFeed");
         JSONArray imagesArray;
         try {
-            imagesArray = jsonFlickrFeedJson.getJSONArray("items");
+            imagesArray = json.getJSONArray("items");
         } catch (JSONException e) {
             e.printStackTrace();
             return null;
