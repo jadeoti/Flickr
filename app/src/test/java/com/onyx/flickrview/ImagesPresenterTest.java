@@ -109,11 +109,11 @@ public class ImagesPresenterTest {
 
         // Callback is captured and invoked with fake api response
         verify(mWebService).getImages(mApiResponseCallbackCaptor.capture());
-        mApiResponseCallbackCaptor.getValue().onLoaded(response);
+        mApiResponseCallbackCaptor.getValue().onLoaded(null);
 
-        // Then progress indicator is hidden and images are shown in UI
+        // Then progress indicator is hidden and error is shown in UI
         verify(mImagesView).setProgressIndicator(false);
-        verify(mImagesView).showImages(response.getImages());
+        verify(mImagesView).showError("Error");
     }
 
 }
