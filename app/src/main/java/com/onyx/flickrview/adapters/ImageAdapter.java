@@ -42,14 +42,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
 
-        Image image = mImages[position];
+        final Image image = mImages[position];
 
-        Log.d(TAG, image.getmMediaUrl().getmImageUrl());
         Glide.with(mContext).load(image.getmMediaUrl().getmImageUrl()).into(viewHolder.mImageView);
     }
 
     public void replaceData(Image[] images) {
-        Log.d(TAG,"In replace data");
         setList(images);
         notifyDataSetChanged();
     }

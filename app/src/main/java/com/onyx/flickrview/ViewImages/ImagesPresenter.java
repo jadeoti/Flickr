@@ -38,7 +38,6 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
 
     @Override
     public void loadImages(boolean forceUpdate) {
-        Log.d(TAG, "In load images");
         mImagesView.setProgressIndicator(true);
 
 //        if (!forceUpdate) {
@@ -52,14 +51,12 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
-            Log.d(TAG, "In FetchImageTask onPreExecute");
             mImagesView.setProgressIndicator(true);
         }
 
         @Override
         protected Image[] doInBackground(String... params) {
             URL imgRequestUrl = FlickrService.buildUrl();
-            Log.d(TAG, "FetchImageTask doInBackground. URL is "+ imgRequestUrl);
             try {
                 String excJsonResponse = FlickrService.getResponse(imgRequestUrl);
                 Image[] imageData = formatJson(excJsonResponse);
@@ -77,7 +74,6 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
 
         @Override
         protected void onPostExecute(Image[] imageData) {
-            Log.d(TAG, "In onPostExecute" );
             mImagesView.setProgressIndicator(false);
             if (imageData != null) {
                 String[] imageUrls = new String[imageData.length];

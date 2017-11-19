@@ -72,12 +72,15 @@ public class Image {
                 "\"imageUrl\": \""+mMediaUrl.getmImageUrl()+"\"\n"+
                 "}";
     }
-    public class ImageUrl{
+    public static class ImageUrl{
         @SerializedName("m")
         private String mImageUrl;
 
         public String getmImageUrl() {
             return mImageUrl;
+        }
+        public ImageUrl(String imageUrl){
+            mImageUrl=imageUrl;
         }
     }
 }
