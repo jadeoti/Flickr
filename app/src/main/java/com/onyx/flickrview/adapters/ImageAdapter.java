@@ -1,6 +1,7 @@
 package com.onyx.flickrview.adapters;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +21,13 @@ import static com.google.common.base.Preconditions.checkNotNull;
 
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> {
 
-    private List<Image> mImages;
+    private final static String TAG = ImageAdapter.class.getSimpleName();
+    private Image[] mImages;
     Context mContext;
 
-    public ImageAdapter(Context context, List<Image> images) {
-        setList(images);
+    public ImageAdapter(Context context) {
         mContext = context;
+        Log.d(TAG, "Called image adapter");
     }
 
     @Override
@@ -39,27 +41,31 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ViewHolder> 
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        Image image = mImages.get(position);
 
-        Glide.with(mContext).load(viewHolder.image.getmMediaUrl().getmImageUrl()).into(viewHolder.mImageView);
+        Image image = mImages[position];
+
+        Log.d(TAG, image.getmMediaUrl().getmImageUrl());
+        Glide.with(mContext).load(image.getmMediaUrl().getmImageUrl()).into(viewHolder.mImageView);
     }
 
-    public void replaceData(List<Image> images) {
+    public void replaceData(Image[] images) {
+        Log.d(TAG,"In replace data");
         setList(images);
         notifyDataSetChanged();
     }
 
-    private void setList(List<Image> images) {
+    private void setList(Image[] images) {
         mImages = checkNotNull(images);
     }
 
     @Override
     public int getItemCount() {
-        return mImages.size();
+        if (null == mImages) return 0;
+        return mImages.length;
     }
 
     public Image getItem(int position) {
-        return mImages.get(position);
+        return mImages[position];
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

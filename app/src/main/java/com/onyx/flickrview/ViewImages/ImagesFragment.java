@@ -8,6 +8,7 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,7 +37,7 @@ public class ImagesFragment extends Fragment implements ImagesContract.View{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mListAdapter = new ImageAdapter(this.getContext(), new ArrayList<Image>(0));
+        mListAdapter = new ImageAdapter(this.getContext());
         mActionsListener = new ImagesPresenter(this);
     }
 
@@ -58,7 +59,7 @@ public class ImagesFragment extends Fragment implements ImagesContract.View{
         int numColumns = getContext().getResources().getInteger(R.integer.num_images_columns);
 
         recyclerView.setHasFixedSize(true);
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), numColumns));
+        recyclerView.setLayoutManager(new StaggeredGridLayoutManager(numColumns,1));
 
 
         // Pull-to-refresh
@@ -119,14 +120,11 @@ public class ImagesFragment extends Fragment implements ImagesContract.View{
     }
 
     @Override
-    public void getImages(List<Image> images) {
+    public void getImages(Image[] images) {
         mListAdapter.replaceData(images);
     }
 
-    @Override
-    public void showImages(String[] imageUrls) {
 
-    }
 
     /**
      * This interface must be implemented by activities that contain this

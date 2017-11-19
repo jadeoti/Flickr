@@ -40,6 +40,7 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
     public void loadImages(boolean forceUpdate) {
         Log.d(TAG, "In load images");
         mImagesView.setProgressIndicator(true);
+
 //        if (!forceUpdate) {
 //            return;
 //        }
@@ -80,12 +81,7 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
             mImagesView.setProgressIndicator(false);
             if (imageData != null) {
                 String[] imageUrls = new String[imageData.length];
-                int index = 0;
-                for(Image image: imageData){
-                    Log.d(TAG, image.toString());
-                    index++;
-                }
-                mImagesView.showImages(imageUrls);
+                mImagesView.getImages(imageData);
             }
         }
     }
