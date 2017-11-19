@@ -7,8 +7,10 @@ import android.util.Log;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
+import com.onyx.flickrview.data.FlickrApiResponse;
 import com.onyx.flickrview.data.Image;
 import com.onyx.flickrview.service.FlickrService;
+import com.onyx.flickrview.webservice.IFlickrService;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -31,18 +33,44 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
 
     private final ImagesContract.View mImagesView;
 
-    public ImagesPresenter(@NonNull ImagesContract.View imagesView) {
+    private IFlickrService mWebService;
+
+    public ImagesPresenter(@NonNull ImagesContract.View imagesView, IFlickrService service) {
         mImagesView = checkNotNull(imagesView, "imagesView cannot be null!");
+        mWebService = checkNotNull(service, "data source cannot be empty");
+
+
     }
 
     @Override
     public void loadImages(boolean forceUpdate) {
+//        Log.d(TAG, "In load images");
         mImagesView.setProgressIndicator(true);
+        mWebService.getImages(new IFlickrService.FlickrServiceCallback<FlickrApiResponse>() {
+            @Override
+            public void onLoaded(FlickrApiResponse data) {
+                mImagesView.setProgressIndicator(false);
+                if (data != null) {
+                    if(data.getImages() != null) {
+                        mImagesView.showImages(data.getImages());
+                    }else {
+                        mImagesView.showError("Error");
+                    }
+                }else {
+                    mImagesView.showError("Error");
+                }
+            }
+
+            @Override
+            public void onError(String message) {
+                mImagesView.showError(message);
+            }
+        });
 
 //        if (!forceUpdate) {
 //            return;
 //        }
-        new FetchImageTask().execute();
+        //new FetchImageTask().execute();
     }
 
 
@@ -50,12 +78,14 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
         @Override
         protected void onPreExecute() {
             super.onPreExecute();
+            Log.d(TAG, "In FetchImageTask onPreExecute");
             mImagesView.setProgressIndicator(true);
         }
 
         @Override
         protected Image[] doInBackground(String... params) {
             URL imgRequestUrl = FlickrService.buildUrl();
+            Log.d(TAG, "FetchImageTask doInBackground. URL is "+ imgRequestUrl);
             try {
                 String excJsonResponse = FlickrService.getResponse(imgRequestUrl);
                 Image[] imageData = formatJson(excJsonResponse);
@@ -73,6 +103,7 @@ public class ImagesPresenter implements ImagesContract.ActionsListener{
 
         @Override
         protected void onPostExecute(Image[] imageData) {
+            Log.d(TAG, "In onPostExecute" );
             mImagesView.setProgressIndicator(false);
             if (imageData != null) {
                 String[] imageUrls = new String[imageData.length];

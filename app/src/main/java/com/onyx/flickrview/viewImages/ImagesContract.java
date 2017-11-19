@@ -12,6 +12,7 @@ public interface ImagesContract {
         void setProgressIndicator(boolean active);
 
         void getImages(Image[] images);
+//        void getImages(List<Image> images);
 
     }
     interface ActionsListener {
