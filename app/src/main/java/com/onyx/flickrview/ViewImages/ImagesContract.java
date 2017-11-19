@@ -1,10 +1,6 @@
-package com.onyx.flickrview.viewImages;
-
-import android.support.annotation.NonNull;
+package com.onyx.flickrview.viewimages;
 
 import com.onyx.flickrview.data.Image;
-
-import java.util.List;
 
 /**
  * Created by onyekaanene on 17/11/2017.

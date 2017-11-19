@@ -1,12 +1,10 @@
-package com.onyx.flickrview.viewImages;
+package com.onyx.flickrview.viewimages;
 
-import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.view.LayoutInflater;
@@ -16,9 +14,6 @@ import android.view.ViewGroup;
 import com.onyx.flickrview.R;
 import com.onyx.flickrview.data.Image;
 import com.onyx.flickrview.adapters.ImageAdapter;
-
-import java.util.ArrayList;
-import java.util.List;
 
 
 public class ImagesFragment extends Fragment implements ImagesContract.View{

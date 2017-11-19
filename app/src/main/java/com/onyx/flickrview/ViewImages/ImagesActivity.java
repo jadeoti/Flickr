@@ -1,4 +1,4 @@
-package com.onyx.flickrview.viewImages;
+package com.onyx.flickrview.viewimages;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;

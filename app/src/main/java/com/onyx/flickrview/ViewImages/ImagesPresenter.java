@@ -1,9 +1,8 @@
-package com.onyx.flickrview.viewImages;
+package com.onyx.flickrview.viewimages;
 
 import android.os.AsyncTask;
 import android.support.annotation.NonNull;
 import android.util.Log;
-import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;

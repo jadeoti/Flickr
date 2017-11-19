@@ -1,9 +1,8 @@
 package com.onyx.flickrview;
 
-import com.google.common.collect.Lists;
 import com.onyx.flickrview.data.Image;
-import com.onyx.flickrview.viewImages.ImagesContract;
-import com.onyx.flickrview.viewImages.ImagesPresenter;
+import com.onyx.flickrview.viewimages.ImagesContract;
+import com.onyx.flickrview.viewimages.ImagesPresenter;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +12,6 @@ import org.mockito.MockitoAnnotations;
 import org.powermock.api.mockito.PowerMockito;
 import org.powermock.core.classloader.annotations.PrepareForTest;
 import org.powermock.modules.junit4.PowerMockRunner;
-
-import java.util.List;
 
 import static org.mockito.Mockito.verify;
 
