@@ -69,19 +69,6 @@ public class ImagesPresenterTest {
 
         mFetchTask= PowerMockito.mock(ImagesPresenter.FetchImageTask.class);
     }
-    @Test
-    public void loadImagesToView() {
-
-        mImagesPresenter.loadImages(true);
-        // verify that progress is shown
-        verify(mImagesView).setProgressIndicator(true);
-//
-//
-//        verify(mImagesPresenter.FetchImageTask())
-//        // Then progress indicator is hidden and notes are shown in UI
-        verify(mImagesView).setProgressIndicator(false);
-        verify(mImagesView).getImages(IMAGES);
-    }
 
 
     @Test
